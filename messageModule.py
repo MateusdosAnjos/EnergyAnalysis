@@ -54,7 +54,7 @@ def tablePopulated(table_name):
     return
 
 ################################################################################
-#                          PROGRAM FLOW MESSAGES                               #
+#               databaseCreator PROGRAM FLOW MESSAGES                          #
 ################################################################################
 def callCheck():
     print(f"{bcolors.OKGREEN}PROGRAMA EXECUTADO CORRETAMENTE.{bcolors.ENDC}")
@@ -88,5 +88,18 @@ def creatingViaQuery():
 
 def finishExecution():
     print(f"{bcolors.OKGREEN}PROGRAMA TERMINOU SEM ERROS!{bcolors.ENDC}")
+    print()
+    return 
+
+################################################################################
+#                   manager PROGRAM FLOW MESSAGES                              #
+################################################################################
+def initDataColector():
+    print(f"{bcolors.OKGREEN}INICIANDO COLETA DE DADOS!{bcolors.ENDC}")
+    print()
+    return 
+
+def initDatabaseCreator():
+    print(f"{bcolors.OKGREEN}INICIANDO CRIAÇÃO DO BANCO DE DADOS!{bcolors.ENDC}")
     print()
     return 
