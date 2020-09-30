@@ -20,7 +20,7 @@ def errorMsgCreateTable(name_table):
     print()
     return
 
-def msgDatabaseFailedToConnect():
+def databaseFailedToConnect():
     print(f"{bcolors.FAIL}FALHA NA CONEXÃO COM O BANCO DE DADOS!{bcolors.ENDC}")
     print()
     return
@@ -101,6 +101,11 @@ def initDataColector():
 
 def initDatabaseCreator():
     print(f"{bcolors.OKGREEN}INICIANDO CRIAÇÃO DO BANCO DE DADOS!{bcolors.ENDC}")
+    print()
+    return 
+
+def initQueries():
+    print(f"{bcolors.OKGREEN}INICIANDO EXECUÇÃO DAS CONSULTAS!{bcolors.ENDC}")
     print()
     return 
 
