@@ -16,6 +16,14 @@ class bcolors:
 ################################################################################
 #                      DATABASE CONNECTION CONSTANTS                           #
 ################################################################################
+def errorMsgCreateTable(name_table):
+    print(f"{bcolors.WARNING}ALGO DEU ERRADO NA CRIAÇÃO DA TABELA:{bcolors.ENDC}", name_table)
+    print("verifique seu banco de dados, se a tabela já existia provavelmente o erro estará relacionado a isso! Em muitos casos não será problema.")
+    print()
+    return
+################################################################################
+#                      DATABASE CONNECTION CONSTANTS                           #
+################################################################################
 DB_HOST = "localhost"
 DB_NAME = "COMERC Database"
 DB_USER = "postgres"
@@ -44,6 +52,16 @@ def createCadEstadoSubmercadoTableCommand(name_table):
          submercado TEXT                    NOT NULL); '''
     return command
 
+def createEmpreendimentosTable(DATABASE_CONNECTION, name_table):
+    try:
+        cur = DATABASE_CONNECTION.cursor()
+        cur.execute('SELECT DISTINCT ceg INTO ' + name_table + ' FROM ralie;')
+        DATABASE_CONNECTION.commit()
+    except:
+        errorMsgCreateTable(name_table)
+        DATABASE_CONNECTION.rollback()
+    return
+
 #All CREATE TABLE functions must be here for the creation of the database.
 #Each element in CREATE_TABLE_COMMANDS is a list containing the name of the 
 #table on first position and the method that create its respective CREATE TABLE
@@ -58,9 +76,7 @@ def createTable(DATABASE_CONNECTION, name_table, command):
         cur.execute(command)
         DATABASE_CONNECTION.commit()
     except:
-        print(f"{bcolors.WARNING}ALGO DEU ERRADO NA CRIAÇÃO DA TABELA:{bcolors.ENDC}", name_table)
-        print("verifique seu banco de dados, se a tabela já existia provavelmente o erro estará relacionado a isso! Em muitos casos não será problema.")
-        print()
+        errorMsgCreateTable(name_table)
         DATABASE_CONNECTION.rollback()
 
 ################################################################################
@@ -157,19 +173,27 @@ def main():
     if len(sys.argv) < 2:
         print("To create a database of xlsx_file use: >python databaseCreator.py <xlsx_file_path>")
         return
+        
     #DATABASE CONNECTION and TABLE CREATION
     DATABASE_CONNECTION = connectToDatabase()
     for element in CREATE_TABLE_COMMANDS:
         createTable(DATABASE_CONNECTION, element[0], element[1](element[0]))
+
     #XLSX FILE READ
     xlsx_file = sys.argv[1]
     ralie_xlsx_file = openRalieXlsx(xlsx_file)
     sheet = ralie_xlsx_file["Usinas em Implantação"]
+
     #XLSX FILE PARSE
     headers = createHeaders(sheet)
+    
     #DATABASE INSERTS
     insertOnTable(DATABASE_CONNECTION, "cad_estado_submercado", genInsertComands("cad_estado_submercado"))
     insertOnTable(DATABASE_CONNECTION, "ralie", genInsertComands("ralie", sheet))
+
+    #CREATE TABLE VIA QUERY
+    createEmpreendimentosTable(DATABASE_CONNECTION, "empreendimentos")
+
 
 if __name__ == "__main__":
     main()
