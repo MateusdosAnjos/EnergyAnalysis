@@ -1,0 +1,27 @@
+Acre, AC, NORTE
+Alagoas, AL, NORDESTE
+Amapá, AP, NORTE
+Amazonas, AM, NORTE
+Bahia, BA, NORDESTE
+Ceará, CE, NORDESTE
+Distrito Federal, DF, SUDESTE/CENTRO-OESTE
+Espírito Santo, ES, SUDESTE/CENTRO-OESTE
+Goiás, GO, SUDESTE/CENTRO-OESTE
+Maranhão, MA, NORTE
+Mato Grosso, MT, SUDESTE/CENTRO-OESTE
+Mato Grosso do Sul, MS, SUDESTE/CENTRO-OESTE
+Minas Gerais, MG, SUDESTE/CENTRO-OESTE
+Pará, PA, NORTE
+Paraíba, PB, NORDESTE
+Paraná, PR, SUL
+Pernambuco, PE, NORDESTE
+Piauí, PI, NORDESTE
+Rio de Janeiro, RJ, SUDESTE/CENTRO-OESTE
+Rio Grande do Norte, RN, NORDESTE
+Rio Grande do Sul, RS, SUL
+Rondônia, RO, SUDESTE/CENTRO-OESTE
+Roraima, RR, ISOLADO
+Santa Catarina, SC, SUL
+São Paulo, SP, SUDESTE/CENTRO-OESTE
+Sergipe, SE, NORDESTE
+Tocantins, TO, NORTE

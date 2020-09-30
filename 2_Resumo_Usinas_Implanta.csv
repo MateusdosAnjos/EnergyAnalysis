@@ -1,0 +1,49 @@
+﻿Previsão de Operação (Ano),Origem de Combustível,Tipo de Geração,Potência (MW)
+2020,Hídrica,CGH,1.512
+2020,Eólica,EOL,688.455
+2020,Hídrica,PCH,62.74
+2020,Solar,UFV,259.55726
+2020,Biomassa,UTE,188.478
+2020,Fóssil,UTE,162.444
+2021,Hídrica,CGH,4
+2021,Eólica,EOL,2608.14
+2021,Hídrica,PCH,199.9576
+2021,Solar,UFV,2282.2399299999975
+2021,Biomassa,UTE,531
+2021,Fóssil,UTE,1888.848
+2022,Hídrica,CGH,2
+2022,Eólica,EOL,3832.575
+2022,Hídrica,PCH,348.8872900000001
+2022,Solar,UFV,6715.650830000152
+2022,Hídrica,UHE,12.5
+2022,Biomassa,UTE,659.101
+2022,Fóssil,UTE,808.276
+2023,Hídrica,CGH,2.1
+2023,Eólica,EOL,938.565
+2023,Hídrica,PCH,452.84828000000005
+2023,Solar,UFV,2147.066940000015
+2023,Biomassa,UTE,182.118
+2023,Fóssil,UTE,1672.599
+2024,Hídrica,CGH,8
+2024,Eólica,EOL,559.1
+2024,Hídrica,PCH,170.762
+2024,Solar,UFV,981.868
+2024,Hídrica,UHE,62
+2024,Biomassa,UTE,145
+2024,Fóssil,UTE,385.747
+2025,Hídrica,CGH,1.6
+2025,Eólica,EOL,808.03
+2025,Hídrica,PCH,67.085
+2025,Solar,UFV,499
+2025,Biomassa,UTE,140
+2025,Fóssil,UTE,129.618
+2026,Hídrica,PCH,11.56
+2026,Biomassa,UTE,25
+2026,Fóssil,UTE,100
+2028,Fóssil,UTE,50
+Sem Previsão,Eólica,EOL,773.9
+Sem Previsão,Hídrica,PCH,458.56795
+Sem Previsão,Hídrica,UHE,352.4
+Sem Previsão,Biomassa,UTE,343.57
+Sem Previsão,Fóssil,UTE,1.975
+Sem Previsão,Nuclear,UTN,1350
