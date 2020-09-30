@@ -87,7 +87,7 @@ def creatingViaQuery():
     return 
 
 def finishExecution():
-    print(f"{bcolors.OKGREEN}PROGRAMA TERMINOU SEM ERROS!{bcolors.ENDC}")
+    print(f"{bcolors.OKGREEN}PROGRAMA DE CRIAÇÃO DO BANCO DE DADOS TERMINOU SEM ERROS!{bcolors.ENDC}")
     print()
     return 
 
