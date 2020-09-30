@@ -9,5 +9,8 @@ def main():
     msg.initDatabaseCreator()
     os.system('python databaseCreator.py ' + sys.argv[1])
     
+    msg.finishExecution()
+
+    
 if __name__ == "__main__":
     main()

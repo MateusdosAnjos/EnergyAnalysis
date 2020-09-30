@@ -103,3 +103,8 @@ def initDatabaseCreator():
     print(f"{bcolors.OKGREEN}INICIANDO CRIAÇÃO DO BANCO DE DADOS!{bcolors.ENDC}")
     print()
     return 
+
+def finishExecution():
+    print(f"{bcolors.OKGREEN}PROGRAMA TERMINOU SEM ERROS!{bcolors.ENDC}")
+    print()
+    return
