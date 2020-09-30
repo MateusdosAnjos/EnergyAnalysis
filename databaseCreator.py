@@ -1,26 +1,8 @@
 import sys
 import psycopg2
 import openpyxl
+import messageModule as msg
 
-#USED FOR COLORES PRINTS
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-################################################################################
-#                      DATABASE CONNECTION CONSTANTS                           #
-################################################################################
-def errorMsgCreateTable(name_table):
-    print(f"{bcolors.WARNING}ALGO DEU ERRADO NA CRIAÇÃO DA TABELA:{bcolors.ENDC}", name_table)
-    print("verifique seu banco de dados, se a tabela já existia provavelmente o erro estará relacionado a isso! Em muitos casos não será problema.")
-    print()
-    return
 ################################################################################
 #                      DATABASE CONNECTION CONSTANTS                           #
 ################################################################################
@@ -32,8 +14,8 @@ DB_PASS = "MyDatabase"
 ################################################################################
 #                         DATABASE CREATION FUNCTIONS                          #
 ################################################################################
-def createRalieTableCommand(name_table):
-    command = '''CREATE TABLE ''' + name_table + '''
+def createRalieTableCommand(table_name):
+    command = '''CREATE TABLE ''' + table_name + '''
         (previsao           INT                     NOT NULL,
          ceg                TEXT                    NOT NULL,
          tipo_geracao       TEXT                    NOT NULL,
@@ -45,21 +27,22 @@ def createRalieTableCommand(name_table):
          inicio_das_obras   DATE                             ); '''
     return command
 
-def createCadEstadoSubmercadoTableCommand(name_table):
-    command = '''CREATE TABLE ''' + name_table + '''
+def createCadEstadoSubmercadoTableCommand(table_name):
+    command = '''CREATE TABLE ''' + table_name + '''
         (estado     TEXT    PRIMARY KEY     NOT NULL,
          sigla      TEXT                    NOT NULL,
          submercado TEXT                    NOT NULL); '''
     return command
 
-def createEmpreendimentosTable(DATABASE_CONNECTION, name_table):
+def createEmpreendimentosTable(DATABASE_CONNECTION, table_name):
     try:
         cur = DATABASE_CONNECTION.cursor()
-        cur.execute('SELECT DISTINCT ceg INTO ' + name_table + ' FROM ralie;')
+        cur.execute('SELECT DISTINCT ceg INTO ' + table_name + ' FROM ralie;')
         DATABASE_CONNECTION.commit()
     except:
-        errorMsgCreateTable(name_table)
+        msg.errorMsgCreateTable(table_name)
         DATABASE_CONNECTION.rollback()
+        return
     return
 
 #All CREATE TABLE functions must be here for the creation of the database.
@@ -70,20 +53,22 @@ CREATE_TABLE_COMMANDS = [
     ["ralie", createRalieTableCommand],
     ["cad_estado_submercado", createCadEstadoSubmercadoTableCommand],
 ]
-def createTable(DATABASE_CONNECTION, name_table, command):
+def createTable(DATABASE_CONNECTION, table_name, command):
     try:
         cur = DATABASE_CONNECTION.cursor()
         cur.execute(command)
         DATABASE_CONNECTION.commit()
     except:
-        errorMsgCreateTable(name_table)
+        msg.errorMsgCreateTable(table_name)
         DATABASE_CONNECTION.rollback()
+        return
+    msg.tableCreated(table_name)
+    return
 
 ################################################################################
 #                       DATABASE CONNECTION FUNCTIONS                          #
 ################################################################################
 def connectToDatabase():
-    print()
     try:
         DATABASE_CONNECTION = psycopg2.connect(
             host = DB_HOST,
@@ -91,13 +76,12 @@ def connectToDatabase():
             user = DB_USER,
             password = DB_PASS
         )
-        print(f"{bcolors.OKGREEN}DATABASE CONNECTED!{bcolors.ENDC}")
-        print()
+        msg.databaseConnected()
         return DATABASE_CONNECTION
     except:
-        print(f"{bcolors.FAIL}DATABASE FAILED TO CONNECT!{bcolors.ENDC}")
+        msg.databaseFailedToConnect()
         return None
-
+    return
 ################################################################################
 #                         DATABASE INSERT FUNCTIONS                            #
 ################################################################################
@@ -111,7 +95,10 @@ def insertOnTable(DATABASE_CONNECTION, table_name, commands_and_data):
             DATABASE_CONNECTION.commit()
         except psycopg2.Error:
             DATABASE_CONNECTION.rollback()
+            msg.tableNotPopulated(table_name)
+            return
         i += 1
+    msg.tablePopulated(table_name)
 
 def genInsertComands(table_name, sheet = None) -> list:
     if table_name == "cad_estado_submercado":
@@ -119,7 +106,8 @@ def genInsertComands(table_name, sheet = None) -> list:
     elif table_name == "ralie":
         return genRalieCommands(sheet)
     else:
-        print("INSERT GENERATOR FOR TABLE: " + table_name + " DOESN'T EXIST!")
+        msg.noGenerator(table_name)
+    return
 
 def genCadEstSubCommands() -> list:
     commands = []
@@ -169,31 +157,40 @@ def createHeaders(sheet) -> list:
 #                                   MAIN                                       #
 ################################################################################
 def main():
+    print()
     #PROGRAM CALL CHECK
+    msg.callCheck()
     if len(sys.argv) < 2:
         print("To create a database of xlsx_file use: >python databaseCreator.py <xlsx_file_path>")
         return
-        
+
     #DATABASE CONNECTION and TABLE CREATION
+    msg.connectAndCreate()
     DATABASE_CONNECTION = connectToDatabase()
     for element in CREATE_TABLE_COMMANDS:
         createTable(DATABASE_CONNECTION, element[0], element[1](element[0]))
 
     #XLSX FILE READ
+    msg.readingFile()
     xlsx_file = sys.argv[1]
     ralie_xlsx_file = openRalieXlsx(xlsx_file)
     sheet = ralie_xlsx_file["Usinas em Implantação"]
 
     #XLSX FILE PARSE
+    msg.processingFile()
     headers = createHeaders(sheet)
     
     #DATABASE INSERTS
+    msg.databaseInserts()
     insertOnTable(DATABASE_CONNECTION, "cad_estado_submercado", genInsertComands("cad_estado_submercado"))
     insertOnTable(DATABASE_CONNECTION, "ralie", genInsertComands("ralie", sheet))
 
     #CREATE TABLE VIA QUERY
+    msg.creatingViaQuery()
     createEmpreendimentosTable(DATABASE_CONNECTION, "empreendimentos")
 
+    msg.finishExecution()
 
+    
 if __name__ == "__main__":
     main()
