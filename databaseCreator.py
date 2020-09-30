@@ -10,6 +10,7 @@ import databaseConnection as dbCon
 def createRalieTableCommand(table_name):
     command = '''CREATE TABLE ''' + table_name + '''
         (previsao           INT                     NOT NULL,
+         previsao_operacao  DATE                            ,
          ceg                TEXT                    NOT NULL,
          tipo_geracao       TEXT                    NOT NULL,
          combustivel        TEXT                    NOT NULL,
@@ -108,12 +109,12 @@ def genCadEstSubCommands() -> list:
 def genRalieCommands(sheet) -> list:
     commands = []
     data = []
-    columns_idx = [1, 3, 4, 5, 6, 7, 10, 13, 19]
+    columns_idx = [1, 2, 3, 4, 5, 6, 7, 10, 13, 19]
     i = 2
     n = sheet.max_row
     while i <= n:
         #CREATE COMMAND FOR EXECUTE
-        commands.append("INSERT INTO ralie (previsao, ceg, tipo_geracao, combustivel, UF, usina, potencia_ug, situacao_das_obras, inicio_das_obras) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);")
+        commands.append("INSERT INTO ralie (previsao, previsao_operacao, ceg, tipo_geracao, combustivel, UF, usina, potencia_ug, situacao_das_obras, inicio_das_obras) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);")
         #CREATE DATA FOR EXECUTE
         data_list = []
         for j in columns_idx:
