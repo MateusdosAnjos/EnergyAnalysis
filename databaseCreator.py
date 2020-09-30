@@ -2,14 +2,7 @@ import sys
 import psycopg2
 import openpyxl
 import messageModule as msg
-
-################################################################################
-#                      DATABASE CONNECTION CONSTANTS                           #
-################################################################################
-DB_HOST = "localhost"
-DB_NAME = "COMERC Database"
-DB_USER = "postgres"
-DB_PASS = "MyDatabase"
+import databaseConnection as dbCon
 
 ################################################################################
 #                         DATABASE CREATION FUNCTIONS                          #
@@ -42,7 +35,9 @@ def createEmpreendimentosTable(DATABASE_CONNECTION, table_name):
     except:
         msg.errorMsgCreateTable(table_name)
         DATABASE_CONNECTION.rollback()
+        cur.close()
         return
+    cur.close()
     return
 
 #All CREATE TABLE functions must be here for the creation of the database.
@@ -61,27 +56,12 @@ def createTable(DATABASE_CONNECTION, table_name, command):
     except:
         msg.errorMsgCreateTable(table_name)
         DATABASE_CONNECTION.rollback()
+        cur.close()
         return
+    cur.close()
     msg.tableCreated(table_name)
     return
 
-################################################################################
-#                       DATABASE CONNECTION FUNCTIONS                          #
-################################################################################
-def connectToDatabase():
-    try:
-        DATABASE_CONNECTION = psycopg2.connect(
-            host = DB_HOST,
-            database = DB_NAME,
-            user = DB_USER,
-            password = DB_PASS
-        )
-        msg.databaseConnected()
-        return DATABASE_CONNECTION
-    except:
-        msg.databaseFailedToConnect()
-        return None
-    return
 ################################################################################
 #                         DATABASE INSERT FUNCTIONS                            #
 ################################################################################
@@ -94,10 +74,14 @@ def insertOnTable(DATABASE_CONNECTION, table_name, commands_and_data):
             cur.execute(commands_and_data[0][i], commands_and_data[1][i])
             DATABASE_CONNECTION.commit()
         except psycopg2.Error:
+            print(commands_and_data[0][i])
+            print(commands_and_data[1][i])
             DATABASE_CONNECTION.rollback()
             msg.tableNotPopulated(table_name)
+            cur.close()
             return
         i += 1
+    cur.close()
     msg.tablePopulated(table_name)
 
 def genInsertComands(table_name, sheet = None) -> list:
@@ -166,7 +150,7 @@ def main():
 
     #DATABASE CONNECTION and TABLE CREATION
     msg.connectAndCreate()
-    DATABASE_CONNECTION = connectToDatabase()
+    DATABASE_CONNECTION = dbCon.connectToDatabase()
     for element in CREATE_TABLE_COMMANDS:
         createTable(DATABASE_CONNECTION, element[0], element[1](element[0]))
 
@@ -189,8 +173,9 @@ def main():
     msg.creatingViaQuery()
     createEmpreendimentosTable(DATABASE_CONNECTION, "empreendimentos")
 
+    DATABASE_CONNECTION.close()
     msg.finishExecution()
 
-    
+
 if __name__ == "__main__":
     main()

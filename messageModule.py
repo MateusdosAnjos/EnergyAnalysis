@@ -30,7 +30,7 @@ def noGenerator(table_name):
     print()
 
 def tableNotPopulated(table_name):
-    print(f"{bcolors.WARNING}TABELA: {table_name} NÃO FOI POPULADA!{bcolors.ENDC}")
+    print(f"{bcolors.WARNING}ERRO NA TABELA: {table_name} NÃO FOI POSSÍVEL INSERIR OS DADOS ACIMA{bcolors.ENDC}")
     print("verifique seu banco de dados, se a tabela já existia provavelmente o erro estará relacionado a isso!")
     print()
     return
